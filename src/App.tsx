@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, X } from 'lucide-react';
+import { CheckCircle2, Menu, Sparkles, X } from 'lucide-react';
 import { CalendarView } from './components/CalendarView';
 import { ContentPlanner } from './components/ContentPlanner';
 import { OptimalityEvaluation } from './components/OptimalityEvaluation';
 import { OverviewDashboard } from './components/OverviewDashboard';
 import { PerformanceMonitoring } from './components/PerformanceMonitoring';
 import { ProfileView } from './components/ProfileView';
-import { TopNav } from './components/TopNav';
+import { Sidebar } from './components/Sidebar';
+import { ChromeSparkle } from './components/Y2KDecorations';
 import { DEFAULT_USER_PROFILE, INITIAL_CONTENT_ITEMS } from './data/initialData';
 import {
   ContentItem,
@@ -19,6 +20,20 @@ import {
 const ITEMS_STORAGE_KEY = 'penjadwalan_konten_optimal_plain_items_v1';
 const PROFILE_STORAGE_KEY = 'penjadwalan_konten_optimal_plain_profile_v1';
 
+const STEP_BREADCRUMBS: Record<FlowStep, string> = {
+  dashboard: 'Beranda',
+  goal: 'Perencanaan · Tujuan Konten',
+  audience: 'Perencanaan · Target Audiens',
+  platform: 'Perencanaan · Platform',
+  idea: 'Perencanaan · Ide & Jenis',
+  active_time: 'Perencanaan · Waktu Aktif',
+  schedule_time: 'Perencanaan · Hari & Jam',
+  calendar: 'Kalender Publikasi',
+  evaluate_optimality: 'Evaluasi Optimalitas',
+  publish_monitoring: 'Analitik & Hasil Publikasi',
+  evaluation_summary: 'Evaluasi Hasil Publikasi',
+};
+
 export default function App() {
   const [items, setItems] = useState<ContentItem[]>(() => {
     try {
@@ -28,7 +43,7 @@ export default function App() {
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // Fallback to empty array
+      // Fallback
     }
     return INITIAL_CONTENT_ITEMS;
   });
@@ -48,6 +63,7 @@ export default function App() {
   const [prefilledDate, setPrefilledDate] = useState<string | undefined>(undefined);
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
   const [isProfileView, setIsProfileView] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -73,9 +89,19 @@ export default function App() {
     }, 3500);
   };
 
-  const currentNavTab: TopNavTab = (() => {
+  const isPlannerStep =
+    activeStep === 'goal' ||
+    activeStep === 'audience' ||
+    activeStep === 'platform' ||
+    activeStep === 'idea' ||
+    activeStep === 'active_time' ||
+    activeStep === 'schedule_time';
+
+  const activeSidebarKey: TopNavTab | 'planner' | 'evaluation' = (() => {
     if (isProfileView) return 'profil';
+    if (isPlannerStep) return 'planner';
     if (activeStep === 'calendar') return 'kalender';
+    if (activeStep === 'evaluate_optimality') return 'evaluation';
     if (
       activeStep === 'publish_monitoring' ||
       activeStep === 'evaluation_summary'
@@ -206,109 +232,155 @@ export default function App() {
     showToast('Seluruh jadwal dan data telah dikosongkan.');
   };
 
-  const isPlannerStep =
-    activeStep === 'goal' ||
-    activeStep === 'audience' ||
-    activeStep === 'platform' ||
-    activeStep === 'idea' ||
-    activeStep === 'active_time' ||
-    activeStep === 'schedule_time';
-
   const editingItem = editingItemId
     ? items.find((item) => item.id === editingItemId) || null
     : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FDF8FA] via-[#FDF8FA] to-[#F8DCE8]/35 text-[#39313A] pb-20 md:pb-10">
-      <TopNav
-        activeTab={currentNavTab}
-        onSelectTab={handleSelectNavTab}
-        onStartNow={() => handleStartNow()}
+    <div className="min-h-screen flex bg-gradient-to-br from-[#FFF9FB] via-[#FDF2F7] to-[#F8DCE8]/65 text-[#39313A] relative">
+      {/* Subtle Y2K decorative ambient background glows */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 right-0 w-96 h-96 rounded-full bg-[#F8DCE8]/55 blur-3xl -z-0"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed bottom-0 left-64 w-80 h-80 rounded-full bg-slate-200/40 blur-3xl -z-0"
       />
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        {isProfileView ? (
-          <ProfileView
-            profile={profile}
-            onSaveProfile={(next) => {
-              setProfile(next);
-              showToast('Profil tersimpan.');
-            }}
-            onClearAllData={handleClearAllData}
-          />
-        ) : (
-          <>
-            {activeStep === 'dashboard' && (
-              <OverviewDashboard
-                items={items}
-                onStartNow={() => handleStartNow()}
-                onNavigateTab={handleSelectNavTab}
-                onOpenStep={handleOpenStep}
-              />
-            )}
+      <Sidebar
+        activeNav={activeSidebarKey}
+        items={items}
+        onSelectTab={handleSelectNavTab}
+        onOpenStep={(step) => handleOpenStep(step)}
+        onStartNow={() => handleStartNow()}
+        isOpenMobile={mobileMenuOpen}
+        onCloseMobile={() => setMobileMenuOpen(false)}
+      />
 
-            {isPlannerStep && (
-              <ContentPlanner
-                currentStep={activeStep}
-                onChangeStep={setActiveStep}
-                existingItems={items}
-                editingItem={editingItem}
-                prefilledDate={prefilledDate}
-                onSaveDraftAndGoCalendar={handleSaveDraftAndGoCalendar}
-                onBackToHome={() => {
-                  setEditingItemId(null);
-                  setActiveStep('dashboard');
-                }}
-              />
-            )}
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
+        {/* Clean Contextual Top Bar */}
+        <header className="sticky top-0 z-30 h-16 bg-white/80 backdrop-blur-lg border-b border-[#F4BFD3]/80 px-4 sm:px-8 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden w-9 h-9 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center text-[#39313A]"
+              aria-label="Buka navigasi"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
 
-            {activeStep === 'calendar' && (
-              <CalendarView
-                items={items}
-                highlightedItemId={focusedItemId}
-                onBack={() => setActiveStep('dashboard')}
-                onCreateForDate={(dateStr) => handleStartNow(dateStr)}
-                onEditSchedule={(id) => handleOpenStep('schedule_time', id)}
-                onDeleteItem={handleDeleteItem}
-                onSaveAndContinueToEvaluation={(id) =>
-                  handleOpenStep('evaluate_optimality', id)
-                }
-              />
-            )}
+            <div className="flex items-center gap-2 text-sm min-w-0">
+              <ChromeSparkle className="w-4 h-4 shrink-0" />
+              <span className="text-[#39313A]/55 hidden sm:inline whitespace-nowrap">
+                Penjadwalan Konten Optimal
+              </span>
+              <span className="text-[#D98EAA] hidden sm:inline" aria-hidden="true">
+                /
+              </span>
+              <span className="font-semibold text-[#39313A] truncate">
+                {isProfileView ? 'Profil Pengguna' : STEP_BREADCRUMBS[activeStep]}
+              </span>
+            </div>
+          </div>
 
-            {activeStep === 'evaluate_optimality' && (
-              <OptimalityEvaluation
-                items={items}
-                focusedItemId={focusedItemId}
-                onBack={() => setActiveStep('calendar')}
-                onMarkNeedsRevision={handleMarkNeedsRevision}
-                onPublishContent={handlePublishContent}
-              />
-            )}
+          <button
+            type="button"
+            onClick={() => handleStartNow()}
+            className="y2k-glossy-pink text-white px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <span>Mulai Sekarang</span>
+          </button>
+        </header>
 
-            {(activeStep === 'publish_monitoring' ||
-              activeStep === 'evaluation_summary') && (
-              <PerformanceMonitoring
-                items={items}
-                focusedItemId={focusedItemId}
-                onBack={() => setActiveStep('dashboard')}
-                onStartNewPlan={() => handleStartNow()}
-                onUpdatePerformance={handleUpdatePerformance}
-                onSaveEvaluationNote={handleSaveEvaluationNote}
-                onFinish={() => {
-                  setActiveStep('dashboard');
-                  showToast('Evaluasi selesai! Kembali ke Beranda.');
-                }}
-              />
-            )}
-          </>
-        )}
-      </main>
+        {/* Spacious Main Viewport */}
+        <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 py-6 sm:py-8">
+          {isProfileView ? (
+            <ProfileView
+              profile={profile}
+              onSaveProfile={(next) => {
+                setProfile(next);
+                showToast('Profil tersimpan.');
+              }}
+              onClearAllData={handleClearAllData}
+            />
+          ) : (
+            <>
+              {activeStep === 'dashboard' && (
+                <OverviewDashboard
+                  items={items}
+                  onStartNow={() => handleStartNow()}
+                  onNavigateTab={handleSelectNavTab}
+                  onOpenStep={handleOpenStep}
+                />
+              )}
+
+              {isPlannerStep && (
+                <ContentPlanner
+                  currentStep={activeStep}
+                  onChangeStep={setActiveStep}
+                  existingItems={items}
+                  editingItem={editingItem}
+                  prefilledDate={prefilledDate}
+                  onSaveDraftAndGoCalendar={handleSaveDraftAndGoCalendar}
+                  onBackToHome={() => {
+                    setEditingItemId(null);
+                    setActiveStep('dashboard');
+                  }}
+                />
+              )}
+
+              {activeStep === 'calendar' && (
+                <CalendarView
+                  items={items}
+                  highlightedItemId={focusedItemId}
+                  onBack={() => setActiveStep('dashboard')}
+                  onCreateForDate={(dateStr) => handleStartNow(dateStr)}
+                  onEditSchedule={(id) => handleOpenStep('schedule_time', id)}
+                  onDeleteItem={handleDeleteItem}
+                  onSaveAndContinueToEvaluation={(id) =>
+                    handleOpenStep('evaluate_optimality', id)
+                  }
+                />
+              )}
+
+              {activeStep === 'evaluate_optimality' && (
+                <OptimalityEvaluation
+                  items={items}
+                  focusedItemId={focusedItemId}
+                  onBack={() => setActiveStep('calendar')}
+                  onStartNewPlan={() => handleStartNow()}
+                  onMarkNeedsRevision={handleMarkNeedsRevision}
+                  onPublishContent={handlePublishContent}
+                />
+              )}
+
+              {(activeStep === 'publish_monitoring' ||
+                activeStep === 'evaluation_summary') && (
+                <PerformanceMonitoring
+                  items={items}
+                  focusedItemId={focusedItemId}
+                  onBack={() => setActiveStep('dashboard')}
+                  onStartNewPlan={() => handleStartNow()}
+                  onUpdatePerformance={handleUpdatePerformance}
+                  onSaveEvaluationNote={handleSaveEvaluationNote}
+                  onFinish={() => {
+                    setActiveStep('dashboard');
+                    showToast('Evaluasi selesai! Kembali ke Beranda.');
+                  }}
+                />
+              )}
+            </>
+          )}
+        </main>
+      </div>
 
       {toastMessage && (
         <div
           role="status"
-          className="fixed bottom-20 md:bottom-5 right-5 z-50 max-w-sm bg-[#39313A] text-white px-4 py-3 rounded-2xl shadow-lg border border-[#D98EAA]/40 flex items-center gap-3 text-xs"
+          className="fixed bottom-5 right-5 z-50 max-w-sm bg-[#39313A] text-white px-4 py-3 rounded-full shadow-lg border border-[#D98EAA]/50 flex items-center gap-3 text-xs"
         >
           <CheckCircle2 className="w-4 h-4 text-[#F4BFD3] shrink-0" />
           <span className="leading-snug">{toastMessage}</span>

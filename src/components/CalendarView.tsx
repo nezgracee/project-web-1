@@ -12,6 +12,7 @@ import {
   formatIndonesianDate,
 } from '../utils/scheduleEngine';
 import { PlatformGlyph, StatusLabel } from './PlatformIcon';
+import { AbstractFlower, ChromeSparkle, ChromeStar } from './Y2KDecorations';
 
 interface CalendarViewProps {
   items: ContentItem[];
@@ -111,82 +112,93 @@ export function CalendarView({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white border border-[#F4BFD3] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header + Platform Filter Pills */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onBack}
-            className="w-9 h-9 rounded-xl border border-[#F4BFD3] hover:bg-[#F8DCE8]/50 flex items-center justify-center text-[#39313A]"
+            className="w-10 h-10 rounded-full y2k-chrome-surface border border-slate-300/80 hover:border-[#D98EAA] flex items-center justify-center text-[#39313A]"
             aria-label="Kembali"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
+          <div>
+            <h1 className="text-xl font-bold text-[#39313A] inline-flex items-center gap-2">
+              <span>Kalender Publikasi</span>
+              <ChromeSparkle className="w-4 h-4" />
+            </h1>
+            <p className="text-xs sm:text-sm text-[#39313A]/65">
+              Klik tanggal untuk melihat atau menjadwalkan konten berdasarkan platform.
+            </p>
+          </div>
+        </div>
 
-          <h1 className="text-base sm:text-lg font-bold text-[#39313A]">
-            Kalender Konten
-          </h1>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-1 p-1 bg-white/85 border border-[#F4BFD3] rounded-full overflow-x-auto">
+            {(['Semua', 'Instagram', 'TikTok', 'Facebook', 'YouTube'] as const).map(
+              (plat) => (
+                <button
+                  key={plat}
+                  type="button"
+                  onClick={() => setPlatformFilter(plat)}
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all whitespace-nowrap ${
+                    platformFilter === plat
+                      ? 'y2k-glossy-pink text-white'
+                      : 'text-[#39313A]/75 hover:bg-[#F8DCE8]/50'
+                  }`}
+                >
+                  {plat}
+                </button>
+              )
+            )}
+          </div>
 
           <button
             type="button"
             onClick={() => onCreateForDate(selectedDate)}
-            className="w-9 h-9 rounded-xl bg-[#F8DCE8] hover:bg-[#F4BFD3] flex items-center justify-center text-[#B55478]"
-            title="Tambah jadwal baru"
-            aria-label="Tambah jadwal baru"
+            className="y2k-glossy-pink text-white text-xs font-semibold px-4 py-2.5 rounded-full inline-flex items-center gap-1.5 transition-all whitespace-nowrap"
           >
-            <CalendarPlus className="w-4 h-4" />
+            <CalendarPlus className="w-3.5 h-3.5" />
+            <span>Tambah Jadwal</span>
           </button>
         </div>
+      </div>
 
-        <div className="flex items-center gap-1 p-1 bg-[#FDF8FA] border border-[#F4BFD3] rounded-xl overflow-x-auto">
-          {(['Semua', 'Instagram', 'TikTok', 'Facebook', 'YouTube'] as const).map(
-            (plat) => (
-              <button
-                key={plat}
-                type="button"
-                onClick={() => setPlatformFilter(plat)}
-                className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  platformFilter === plat
-                    ? 'bg-[#B55478] text-white'
-                    : 'text-[#39313A]/75 hover:bg-[#F8DCE8]/50'
-                }`}
-              >
-                {plat}
-              </button>
-            )
-          )}
-        </div>
+      {/* Main Split: Calendar Grid + Selected Day Panel */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        <section className="xl:col-span-7 y2k-glass-card border border-[#F4BFD3] rounded-3xl p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={prevMonth}
+              className="w-9 h-9 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center text-[#39313A]"
+              aria-label="Bulan sebelumnya"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-base font-bold text-[#39313A] inline-flex items-center gap-2">
+              <ChromeStar className="w-4 h-4" />
+              {MONTH_NAMES[month]} {year}
+            </span>
+            <button
+              type="button"
+              onClick={nextMonth}
+              className="w-9 h-9 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center text-[#39313A]"
+              aria-label="Bulan berikutnya"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
 
-        <div className="flex items-center justify-between px-2">
-          <button
-            type="button"
-            onClick={prevMonth}
-            className="p-1.5 rounded-lg hover:bg-[#F8DCE8]/50 text-[#39313A]"
-            aria-label="Bulan sebelumnya"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <span className="text-sm sm:text-base font-bold text-[#39313A]">
-            {MONTH_NAMES[month]} {year}
-          </span>
-          <button
-            type="button"
-            onClick={nextMonth}
-            className="p-1.5 rounded-lg hover:bg-[#F8DCE8]/50 text-[#39313A]"
-            aria-label="Bulan berikutnya"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="space-y-2">
           <div className="grid grid-cols-7 text-center text-xs font-semibold text-[#39313A]/65 pb-1">
             {WEEKDAY_HEADERS.map((d) => (
               <div key={d}>{d}</div>
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-y-2 justify-items-center">
+          <div className="grid grid-cols-7 gap-y-2.5 justify-items-center">
             {calendarCells.map((cell, idx) => {
               if (!cell.dateStr || !cell.dayNumber) {
                 return <div key={`empty-${idx}`} className="w-10 h-11" />;
@@ -206,12 +218,12 @@ export function CalendarView({
                   className="flex flex-col items-center gap-1 group"
                 >
                   <span
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-mono tabular-nums transition-colors ${
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-mono tabular-nums transition-all ${
                       isSelected
-                        ? 'bg-[#B55478] text-white font-bold'
+                        ? 'y2k-glossy-pink text-white font-bold'
                         : hasScheduled
-                          ? 'bg-[#F8DCE8] text-[#39313A] font-semibold group-hover:bg-[#F4BFD3]'
-                          : 'text-[#39313A] hover:bg-[#FDF8FA]'
+                          ? 'bg-[#F8DCE8] border border-[#D98EAA] text-[#39313A] font-semibold'
+                          : 'text-[#39313A] hover:bg-white'
                     }`}
                   >
                     {cell.dayNumber}
@@ -232,48 +244,56 @@ export function CalendarView({
               );
             })}
           </div>
-        </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-[11px] text-[#39313A]/75 border-t border-[#F4BFD3]/60">
-          {(['Instagram', 'TikTok', 'Facebook', 'YouTube'] as SocialPlatform[]).map(
-            (plat) => (
-              <span key={plat} className="inline-flex items-center gap-1.5">
-                <span
-                  className="w-2.5 h-2.5 rounded-full inline-block"
-                  style={{ backgroundColor: PLATFORM_PINK_STYLES[plat].swatch }}
-                />
-                {plat}
-              </span>
-            )
-          )}
-        </div>
+          {/* Platform Legend */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-3 text-xs text-[#39313A]/75 border-t border-[#F4BFD3]/60">
+            {(['Instagram', 'TikTok', 'Facebook', 'YouTube'] as SocialPlatform[]).map(
+              (plat) => (
+                <span key={plat} className="inline-flex items-center gap-1.5">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full inline-block"
+                    style={{ backgroundColor: PLATFORM_PINK_STYLES[plat].swatch }}
+                  />
+                  {plat}
+                </span>
+              )
+            )}
+          </div>
+        </section>
 
-        <div className="space-y-2.5">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#39313A]">
-              Jadwal Tanggal {formatIndonesianDate(selectedDate)}
-            </span>
+        {/* Right: Selected Date Detail Panel */}
+        <aside className="xl:col-span-5 y2k-glass-card border border-[#F4BFD3] rounded-3xl p-6 space-y-5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-sm font-bold text-[#39313A]">
+              Jadwal · {formatIndonesianDate(selectedDate)}
+            </h2>
             <button
               type="button"
               onClick={() => onCreateForDate(selectedDate)}
-              className="font-semibold text-[#B55478] hover:text-[#9E3F63]"
+              className="text-xs font-semibold text-[#B55478] hover:text-[#9E3F63]"
             >
               + Tambah di Tanggal Ini
             </button>
           </div>
 
           {selectedDateItems.length === 0 ? (
-            <div className="p-4 rounded-2xl border border-dashed border-[#F4BFD3] bg-[#FDF8FA] text-center text-xs text-[#39313A]/65">
-              Belum ada konten dijadwalkan pada tanggal ini.
+            <div className="py-10 px-4 rounded-2xl border border-dashed border-[#D98EAA]/70 bg-white/60 text-center space-y-2.5">
+              <AbstractFlower className="w-8 h-8 mx-auto" />
+              <p className="text-xs font-semibold text-[#39313A]">
+                Belum ada konten pada tanggal ini
+              </p>
+              <p className="text-[11px] text-[#39313A]/65">
+                Klik tombol Tambah Jadwal untuk memasukkan rencana kontenmu.
+              </p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {selectedDateItems.map((item) => {
                 const style = PLATFORM_PINK_STYLES[item.platform];
                 return (
                   <div
                     key={item.id}
-                    className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${style.surface} ${style.border} ${style.text}`}
+                    className={`p-4 rounded-2xl border flex items-center justify-between gap-3 ${style.surface} ${style.border} ${style.text}`}
                   >
                     <div className="min-w-0 space-y-1">
                       <div className="flex items-center gap-2 text-[11px] font-mono opacity-90">
@@ -282,8 +302,8 @@ export function CalendarView({
                           {item.platform} · {item.format} · {item.scheduledTime} WIB
                         </span>
                       </div>
-                      <p className="text-sm font-semibold truncate">{item.title}</p>
-                      <div className="text-[11px] opacity-85">
+                      <p className="text-sm font-bold truncate">{item.title}</p>
+                      <div className="text-[11px] opacity-90">
                         <StatusLabel status={item.status} />
                       </div>
                     </div>
@@ -292,7 +312,7 @@ export function CalendarView({
                       <button
                         type="button"
                         onClick={() => onEditSchedule(item.id)}
-                        className="p-2 rounded-xl bg-white/85 text-[#39313A] hover:bg-white transition-colors"
+                        className="p-2 rounded-full bg-white/90 text-[#39313A] hover:bg-white transition-colors"
                         title="Ubah hari & jam"
                         aria-label="Ubah jadwal"
                       >
@@ -301,7 +321,7 @@ export function CalendarView({
                       <button
                         type="button"
                         onClick={() => onDeleteItem(item.id)}
-                        className="p-2 rounded-xl bg-white/85 text-red-700 hover:bg-white transition-colors"
+                        className="p-2 rounded-full bg-white/90 text-red-700 hover:bg-white transition-colors"
                         title="Hapus jadwal"
                         aria-label="Hapus jadwal"
                       >
@@ -313,25 +333,25 @@ export function CalendarView({
               })}
             </div>
           )}
-        </div>
 
-        {primaryEvalItem ? (
-          <button
-            type="button"
-            onClick={() => onSaveAndContinueToEvaluation(primaryEvalItem.id)}
-            className="w-full py-3.5 px-6 text-sm sm:text-base font-semibold text-white bg-[#B55478] hover:bg-[#9E3F63] rounded-2xl transition-colors"
-          >
-            Simpan Jadwal &amp; Evaluasi
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => onCreateForDate(selectedDate)}
-            className="w-full py-3.5 px-6 text-sm sm:text-base font-semibold text-white bg-[#B55478] hover:bg-[#9E3F63] rounded-2xl transition-colors"
-          >
-            Tambah Jadwal Pertama
-          </button>
-        )}
+          {primaryEvalItem ? (
+            <button
+              type="button"
+              onClick={() => onSaveAndContinueToEvaluation(primaryEvalItem.id)}
+              className="w-full y2k-glossy-pink text-white py-3.5 px-6 text-sm font-semibold rounded-full transition-all cursor-pointer"
+            >
+              Simpan Jadwal &amp; Evaluasi
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onCreateForDate(selectedDate)}
+              className="w-full y2k-glossy-pink text-white py-3.5 px-6 text-sm font-semibold rounded-full transition-all cursor-pointer"
+            >
+              Tambah Jadwal Pertama
+            </button>
+          )}
+        </aside>
       </div>
     </div>
   );

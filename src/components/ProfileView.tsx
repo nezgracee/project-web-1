@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle2, Save, Trash2, User } from 'lucide-react';
 import { SocialPlatform, UserProfile } from '../types/content';
+import { ChromeSparkle, ChromeStar } from './Y2KDecorations';
 
 interface ProfileViewProps {
   profile: UserProfile;
@@ -32,19 +33,25 @@ export function ProfileView({
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="bg-white border border-[#F4BFD3] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        <div>
-          <h1 className="text-lg font-bold text-[#39313A]">Profil Pengguna</h1>
-          <p className="text-xs sm:text-sm text-[#39313A]/65 mt-0.5">
-            Atur identitas akun atau kelola data jadwal tersimpan Anda.
-          </p>
+    <div className="max-w-2xl mx-auto">
+      <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-6 sm:p-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-bold text-[#39313A] inline-flex items-center gap-2">
+              <span>Profil Pengguna</span>
+              <ChromeSparkle className="w-4 h-4" />
+            </h1>
+            <p className="text-xs sm:text-sm text-[#39313A]/65 mt-0.5">
+              Atur identitas akun dan preferensi platform publikasi Anda.
+            </p>
+          </div>
+          <ChromeStar className="w-6 h-6" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="flex items-center gap-4 pb-4 border-b border-[#F4BFD3]/70">
-            <div className="w-12 h-12 rounded-2xl bg-[#F8DCE8] border border-[#D98EAA] flex items-center justify-center shrink-0">
-              <User className="w-6 h-6 text-[#B55478]" />
+            <div className="w-12 h-12 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center shrink-0">
+              <User className="w-5 h-5 text-[#B55478]" />
             </div>
             <div>
               <p className="text-base font-bold text-[#39313A]">
@@ -68,7 +75,7 @@ export function ProfileView({
                 value={form.name}
                 onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                 placeholder="Masukkan nama Anda"
-                className="w-full px-3.5 py-2.5 text-sm border border-[#F4BFD3] rounded-xl focus:outline-none focus:border-[#B55478]"
+                className="w-full px-4 py-2.5 text-sm border border-[#F4BFD3] rounded-2xl bg-white focus:outline-none focus:border-[#B55478]"
               />
             </div>
 
@@ -82,7 +89,7 @@ export function ProfileView({
                 value={form.handle}
                 onChange={(e) => setForm((p) => ({ ...p, handle: e.target.value }))}
                 placeholder="Contoh: @username"
-                className="w-full px-3.5 py-2.5 text-sm border border-[#F4BFD3] rounded-xl focus:outline-none focus:border-[#B55478]"
+                className="w-full px-4 py-2.5 text-sm border border-[#F4BFD3] rounded-2xl bg-white focus:outline-none focus:border-[#B55478]"
               />
             </div>
           </div>
@@ -98,7 +105,7 @@ export function ProfileView({
                 onChange={(e) =>
                   setForm((p) => ({ ...p, role: e.target.value as UserProfile['role'] }))
                 }
-                className="w-full px-3.5 py-2.5 text-sm border border-[#F4BFD3] rounded-xl bg-white focus:outline-none focus:border-[#B55478]"
+                className="w-full px-4 py-2.5 text-sm border border-[#F4BFD3] rounded-2xl bg-white focus:outline-none focus:border-[#B55478]"
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -121,7 +128,7 @@ export function ProfileView({
                     primaryPlatform: e.target.value as SocialPlatform,
                   }))
                 }
-                className="w-full px-3.5 py-2.5 text-sm border border-[#F4BFD3] rounded-xl bg-white focus:outline-none focus:border-[#B55478]"
+                className="w-full px-4 py-2.5 text-sm border border-[#F4BFD3] rounded-2xl bg-white focus:outline-none focus:border-[#B55478]"
               >
                 {PLATFORMS.map((p) => (
                   <option key={p} value={p}>
@@ -142,7 +149,7 @@ export function ProfileView({
               value={form.bio}
               onChange={(e) => setForm((p) => ({ ...p, bio: e.target.value }))}
               placeholder="Tuliskan topik utama atau target konten Anda..."
-              className="w-full px-3.5 py-2.5 text-sm border border-[#F4BFD3] rounded-xl focus:outline-none focus:border-[#B55478]"
+              className="w-full px-4 py-2.5 text-sm border border-[#F4BFD3] rounded-2xl bg-white focus:outline-none focus:border-[#B55478]"
             />
           </div>
 
@@ -150,7 +157,7 @@ export function ProfileView({
             <button
               type="button"
               onClick={onClearAllData}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-red-700 bg-[#FDF8FA] border border-[#F4BFD3] hover:bg-red-50 rounded-xl transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-red-700 bg-white border border-[#F4BFD3] hover:bg-red-50 rounded-full transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Kosongkan Semua Jadwal
@@ -165,7 +172,7 @@ export function ProfileView({
               )}
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-white bg-[#B55478] hover:bg-[#9E3F63] rounded-xl transition-colors"
+                className="y2k-glossy-pink text-white px-5 py-2 text-xs font-semibold rounded-full inline-flex items-center gap-2 transition-all"
               >
                 <Save className="w-3.5 h-3.5" />
                 Simpan Profil

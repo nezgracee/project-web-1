@@ -12,11 +12,13 @@ import {
   getDayOfWeekFromDate,
 } from '../utils/scheduleEngine';
 import { PlatformGlyph } from './PlatformIcon';
+import { ChromeButterfly, ChromeSparkle, ChromeStar } from './Y2KDecorations';
 
 interface OptimalityEvaluationProps {
   items: ContentItem[];
   focusedItemId: string | null;
   onBack: () => void;
+  onStartNewPlan: () => void;
   onMarkNeedsRevision: (itemId: string, note: string) => void;
   onPublishContent: (itemId: string) => void;
 }
@@ -25,6 +27,7 @@ export function OptimalityEvaluation({
   items,
   focusedItemId,
   onBack,
+  onStartNewPlan,
   onMarkNeedsRevision,
   onPublishContent,
 }: OptimalityEvaluationProps) {
@@ -41,29 +44,35 @@ export function OptimalityEvaluation({
     : null;
 
   return (
-    <div className="max-w-xl mx-auto">
-      <div className="bg-white border border-[#F4BFD3] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        {/* Header matching Screen 9 of Sketch */}
-        <div className="flex items-center justify-between">
+    <div className="max-w-3xl mx-auto">
+      <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#F8DCE8]/65 blur-2xl"
+        />
+
+        <div className="flex items-center justify-between relative z-10">
           <button
             type="button"
             onClick={onBack}
-            className="w-9 h-9 rounded-xl border border-[#F4BFD3] hover:bg-[#F8DCE8]/50 flex items-center justify-center text-[#39313A]"
+            className="w-10 h-10 rounded-full y2k-chrome-surface border border-slate-300/80 hover:border-[#D98EAA] flex items-center justify-center text-[#39313A]"
             aria-label="Kembali ke Kalender"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <h1 className="text-base sm:text-lg font-bold text-[#39313A]">
-            Evaluasi Jadwal
-          </h1>
+          <div className="flex items-center gap-2">
+            <ChromeStar className="w-4 h-4" />
+            <h1 className="text-base sm:text-lg font-bold text-[#39313A]">
+              Evaluasi Optimalitas Jadwal
+            </h1>
+          </div>
 
-          <span className="w-9" aria-hidden="true" />
+          <span className="w-10" aria-hidden="true" />
         </div>
 
-        {/* Item Switcher if multiple scheduled items exist */}
         {queue.length > 1 && (
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 relative z-10">
             <label htmlFor="eval-select" className="block text-xs font-semibold text-[#39313A]/70">
               Pilih Jadwal yang Dievaluasi
             </label>
@@ -71,7 +80,7 @@ export function OptimalityEvaluation({
               id="eval-select"
               value={currentItem?.id || ''}
               onChange={(e) => setSelectedId(e.target.value)}
-              className="w-full px-3.5 py-2 text-xs border border-[#F4BFD3] rounded-xl bg-[#FDF8FA] text-[#39313A] focus:outline-none focus:border-[#B55478]"
+              className="w-full px-4 py-2.5 text-xs font-medium border border-[#F4BFD3] rounded-2xl bg-white text-[#39313A] focus:outline-none focus:border-[#B55478]"
             >
               {queue.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -84,37 +93,46 @@ export function OptimalityEvaluation({
         )}
 
         {!currentItem || !optimality ? (
-          <div className="py-10 text-center space-y-3">
-            <p className="text-sm font-semibold text-[#39313A]">
-              Tidak ada jadwal yang menunggu evaluasi
-            </p>
+          <div className="py-12 text-center space-y-4 relative z-10">
+            <ChromeButterfly className="w-11 h-11 mx-auto y2k-float-slow" />
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-[#39313A]">
+                Belum ada jadwal yang menunggu evaluasi
+              </p>
+              <p className="text-xs text-[#39313A]/70 max-w-sm mx-auto">
+                Buat rencana konten terlebih dahulu untuk memeriksa apakah hari dan jam
+                publikasinya sudah optimal.
+              </p>
+            </div>
             <button
               type="button"
-              onClick={onBack}
-              className="px-5 py-2.5 text-xs font-semibold text-white bg-[#B55478] rounded-xl"
+              onClick={onStartNewPlan}
+              className="y2k-glossy-pink text-white px-6 py-2.5 text-xs font-semibold rounded-full transition-all"
             >
-              Kembali ke Kalender
+              Buat Jadwal Baru
             </button>
           </div>
         ) : (
-          <div className="space-y-6">
-            <p className="text-center text-xs font-semibold tracking-wide text-[#B55478]">
-              Apakah Jadwal Sudah Optimal?
+          <div className="space-y-6 relative z-10">
+            <p className="text-center text-xs font-semibold tracking-wide text-[#B55478] inline-flex items-center justify-center gap-1.5 w-full">
+              <ChromeSparkle className="w-3.5 h-3.5" />
+              <span>Apakah Jadwal Sudah Optimal?</span>
             </p>
 
-            {/* Centered Status Card matching Screen 9 of Sketch */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#FDF8FA] border border-[#F4BFD3] text-center space-y-4">
+            {/* Centered Status Card */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white/85 border border-[#F4BFD3] text-center space-y-4">
               {optimality.isOptimal ? (
                 <>
-                  <div className="w-16 h-16 mx-auto rounded-full bg-emerald-600 flex items-center justify-center text-white">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-emerald-600 shadow-[0_8px_20px_-6px_rgba(5,150,105,0.45)] flex items-center justify-center text-white">
                     <Check className="w-8 h-8 stroke-[2.5]" />
                   </div>
                   <div className="space-y-1.5">
                     <h2 className="text-lg font-bold text-[#39313A]">
                       Jadwal Sudah Optimal!
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#39313A]/75 leading-relaxed max-w-sm mx-auto">
-                      Jadwal publikasi kamu sudah sesuai dengan analisis audiens.
+                    <p className="text-xs sm:text-sm text-[#39313A]/75 leading-relaxed max-w-md mx-auto">
+                      Jadwal publikasi kamu sudah sesuai dengan analisis waktu aktif audiens dan
+                      bebas bentrok jadwal.
                     </p>
                   </div>
                 </>
@@ -127,14 +145,13 @@ export function OptimalityEvaluation({
                     <h2 className="text-lg font-bold text-[#39313A]">
                       Jadwal Belum Optimal
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#39313A]/75 leading-relaxed max-w-sm mx-auto">
+                    <p className="text-xs sm:text-sm text-[#39313A]/75 leading-relaxed max-w-md mx-auto">
                       {optimality.recommendation}
                     </p>
                   </div>
                 </>
               )}
 
-              {/* Content Summary Line */}
               <div className="pt-3 border-t border-[#F4BFD3]/70 flex flex-wrap items-center justify-center gap-2 text-xs text-[#39313A]/80">
                 <PlatformGlyph platform={currentItem.platform} className="w-3.5 h-3.5" />
                 <span className="font-semibold">{currentItem.title}</span>
@@ -147,16 +164,8 @@ export function OptimalityEvaluation({
               </div>
             </div>
 
-            {/* Decision Buttons */}
             {optimality.isOptimal ? (
-              <div className="space-y-2.5">
-                <button
-                  type="button"
-                  onClick={() => onPublishContent(currentItem.id)}
-                  className="w-full py-3.5 px-6 text-sm sm:text-base font-semibold text-white bg-[#B55478] hover:bg-[#9E3F63] rounded-2xl transition-colors"
-                >
-                  Lanjutkan ke Publikasi
-                </button>
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
                   onClick={() =>
@@ -165,27 +174,34 @@ export function OptimalityEvaluation({
                       'Pengguna memilih menyesuaikan ulang hari dan jam publikasi.'
                     )
                   }
-                  className="w-full py-2.5 px-4 text-xs font-medium text-[#39313A]/75 hover:text-[#39313A] hover:bg-[#F8DCE8]/40 rounded-xl transition-colors"
+                  className="flex-1 y2k-chrome-surface border border-slate-300/80 hover:border-[#D98EAA] text-[#39313A] py-3 px-5 text-xs sm:text-sm font-semibold rounded-full transition-all"
                 >
-                  Belum Optimal? Perbaiki Jadwal Publikasi
+                  Ubah Hari / Jam
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onPublishContent(currentItem.id)}
+                  className="flex-1 y2k-glossy-pink text-white py-3 px-6 text-xs sm:text-sm font-semibold rounded-full transition-all"
+                >
+                  Lanjutkan ke Publikasi
                 </button>
               </div>
             ) : (
-              <div className="space-y-2.5">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
                   onClick={() =>
                     onMarkNeedsRevision(currentItem.id, optimality.recommendation)
                   }
-                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 text-sm sm:text-base font-semibold text-white bg-[#B55478] hover:bg-[#9E3F63] rounded-2xl transition-colors"
+                  className="flex-1 y2k-glossy-pink text-white py-3 px-6 text-xs sm:text-sm font-semibold rounded-full inline-flex items-center justify-center gap-2 transition-all"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
-                  Perbaiki Jadwal Publikasi
+                  <span>Perbaiki Jadwal Publikasi</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onPublishContent(currentItem.id)}
-                  className="w-full py-2.5 px-4 text-xs font-medium text-[#B55478] hover:bg-[#F8DCE8]/40 rounded-xl transition-colors"
+                  className="flex-1 y2k-chrome-surface border border-slate-300/80 hover:border-[#D98EAA] text-[#B55478] py-3 px-5 text-xs sm:text-sm font-semibold rounded-full transition-all"
                 >
                   Tetap Lanjutkan ke Publikasi
                 </button>

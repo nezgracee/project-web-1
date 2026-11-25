@@ -14,7 +14,7 @@
 @layer base {
   body {
     font-family: var(--font-sans);
-    background-color: #FDF8FA;
+    background-color: #FDF4F8;
     color: #39313A;
   }
 
@@ -25,4 +25,54 @@
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+.y2k-chrome-surface {
+  background: linear-gradient(135deg, #ffffff 0%, #e7ebf1 40%, #f9fafc 68%, #d6dde7 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 4px 12px -4px rgba(57, 49, 58, 0.12);
+}
+
+.y2k-glossy-pink {
+  background: linear-gradient(180deg, #dc93af 0%, #b55478 54%, #9e3f63 100%);
+  box-shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.45),
+    0 8px 20px -6px rgba(181, 84, 120, 0.48);
+}
+
+.y2k-glossy-pink:hover {
+  background: linear-gradient(180deg, #d382a2 0%, #a6466b 54%, #8f3557 100%);
+}
+
+.y2k-glass-card {
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 32px -14px rgba(181, 84, 120, 0.16);
+}
+
+@keyframes y2kFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(2deg);
+  }
+}
+
+.y2k-float-slow {
+  animation: y2kFloat 6s ease-in-out infinite;
+}
+
+.y2k-float-delayed {
+  animation: y2kFloat 7.5s ease-in-out 1.2s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .y2k-float-slow,
+  .y2k-float-delayed {
+    animation: none;
+  }
 }
