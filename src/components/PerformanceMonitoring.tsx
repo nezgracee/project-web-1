@@ -14,10 +14,16 @@ import {
 } from '../utils/scheduleEngine';
 import { PlatformGlyph } from './PlatformIcon';
 import {
-  AbstractFlower,
   ChromeSparkle,
   ChromeStar,
+  CuteSmiley,
   GlossyHeart,
+  MiniComputer,
+  PinkBow,
+  PinkFlower,
+  RetroCD,
+  StickerLabel,
+  WashiTape,
 } from './Y2KDecorations';
 
 interface PerformanceMonitoringProps {
@@ -134,16 +140,19 @@ export function PerformanceMonitoring({
           <button
             type="button"
             onClick={onBack}
-            className="w-10 h-10 rounded-full y2k-chrome-surface border border-slate-300/80 hover:border-[#D98EAA] flex items-center justify-center text-[#39313A]"
+            className="w-10 h-10 rounded-full y2k-chrome-surface border-2 border-white ring-1 ring-slate-300/80 hover:ring-[#D98EAA] flex items-center justify-center text-[#39313A] cursor-pointer"
             aria-label="Kembali"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <div>
-            <h1 className="text-xl font-bold text-[#39313A] inline-flex items-center gap-2">
-              <span>Monitoring &amp; Hasil Publikasi</span>
-              <ChromeSparkle className="w-4 h-4" />
-            </h1>
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl font-bold text-[#39313A] inline-flex items-center gap-2">
+                <span>Monitoring &amp; Hasil Publikasi</span>
+                <ChromeSparkle className="w-5 h-5 y2k-twinkle" />
+              </h1>
+              <StickerLabel text="STATS LOG" variant="chrome" className="rotate-2" />
+            </div>
             <p className="text-xs sm:text-sm text-[#39313A]/65">
               Catat performa konten dan evaluasi hasil publikasi untuk siklus berikutnya.
             </p>
@@ -154,7 +163,7 @@ export function PerformanceMonitoring({
           <button
             type="button"
             onClick={() => setIsEditing((v) => !v)}
-            className="y2k-chrome-surface border border-slate-300/80 hover:border-[#D98EAA] text-[#39313A] px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 whitespace-nowrap"
+            className="y2k-chrome-surface border-2 border-white ring-1 ring-slate-300/80 hover:ring-[#D98EAA] text-[#39313A] px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
           >
             <Pencil className="w-3.5 h-3.5 text-[#B55478]" />
             <span>{isEditing ? 'Tutup Editor' : 'Catat Metrik'}</span>
@@ -163,38 +172,44 @@ export function PerformanceMonitoring({
       </div>
 
       {!currentItem ? (
-        <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-12 text-center space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <AbstractFlower className="w-8 h-8" />
-            <span className="w-12 h-12 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-[#B55478]" />
-            </span>
-            <ChromeStar className="w-6 h-6" />
+        <div className="relative overflow-visible pt-2">
+          <WashiTape className="-top-1 left-12 -rotate-3 z-20 absolute" />
+          <PinkBow className="w-12 h-10 -top-4 -right-2 rotate-12 z-20 pointer-events-none absolute" />
+          <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-[2rem] p-12 text-center space-y-4">
+            <div className="flex items-center justify-center gap-3">
+              <RetroCD className="w-12 h-12 -rotate-12 sticker-interactive" />
+              <PinkFlower className="w-9 h-9 -rotate-6 sticker-interactive" />
+              <span className="w-12 h-12 rounded-full y2k-chrome-surface border-2 border-white ring-1 ring-slate-300/80 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-[#B55478]" />
+              </span>
+              <MiniComputer className="w-11 h-11 rotate-6 sticker-interactive" />
+              <ChromeStar className="w-7 h-7 y2k-twinkle" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-[#39313A]">
+                Belum ada konten yang dipublikasikan
+              </p>
+              <p className="text-xs text-[#39313A]/70 max-w-sm mx-auto leading-relaxed">
+                Buat rencana konten, jadwalkan di kalender, dan lanjutkan ke publikasi untuk
+                mencatat performa konten Anda di sini.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onStartNewPlan}
+              className="y2k-glossy-pink border-2 border-white text-white px-6 py-2.5 text-xs font-semibold rounded-full inline-flex items-center gap-2 transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Buat Jadwal Konten</span>
+            </button>
           </div>
-          <div className="space-y-1">
-            <p className="text-sm font-bold text-[#39313A]">
-              Belum ada konten yang dipublikasikan
-            </p>
-            <p className="text-xs text-[#39313A]/70 max-w-sm mx-auto leading-relaxed">
-              Buat rencana konten, jadwalkan di kalender, dan lanjutkan ke publikasi untuk
-              mencatat performa konten Anda di sini.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onStartNewPlan}
-            className="y2k-glossy-pink text-white px-6 py-2.5 text-xs font-semibold rounded-full inline-flex items-center gap-2 transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Buat Jadwal Konten</span>
-          </button>
         </div>
       ) : (
         <div className="space-y-6">
           {/* Content Selector */}
-          <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-xs font-semibold text-[#39313A]">
-              <GlossyHeart className="w-4 h-4 shrink-0" />
+              <GlossyHeart className="w-5 h-5 shrink-0" />
               <span>Konten Terpublikasi ({publishedItems.length})</span>
             </div>
             <select
@@ -216,55 +231,58 @@ export function PerformanceMonitoring({
 
           {/* Chart & Metrics Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <section className="lg:col-span-7 y2k-glass-card border border-[#F4BFD3] rounded-3xl p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-[#39313A]">Performa Konten</h2>
-                <span className="inline-flex items-center gap-1.5 text-xs text-[#39313A]/75">
-                  <PlatformGlyph platform={currentItem.platform} className="w-3.5 h-3.5" />
-                  {currentItem.platform} · {currentItem.format}
-                </span>
-              </div>
+            <section className="lg:col-span-7 relative overflow-visible">
+              <WashiTape className="-top-2 left-8 -rotate-3 z-20 absolute" />
+              <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-bold text-[#39313A]">Performa Konten</h2>
+                  <span className="inline-flex items-center gap-1.5 text-xs text-[#39313A]/75">
+                    <PlatformGlyph platform={currentItem.platform} className="w-3.5 h-3.5" />
+                    {currentItem.platform} · {currentItem.format}
+                  </span>
+                </div>
 
-              <div className="p-4 rounded-2xl bg-white/85 border border-[#F4BFD3]">
-                <svg
-                  viewBox="0 0 360 110"
-                  className="w-full h-36 overflow-visible"
-                  role="img"
-                  aria-label="Grafik performa konten"
-                >
-                  <defs>
-                    <linearGradient id="pinkAreaY2K" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#D98EAA" stopOpacity="0.45" />
-                      <stop offset="65%" stopColor="#F4BFD3" stopOpacity="0.2" />
-                      <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.02" />
-                    </linearGradient>
-                  </defs>
-                  <path d={areaPath} fill="url(#pinkAreaY2K)" />
-                  <path
-                    d={linePath}
-                    fill="none"
-                    stroke="#B55478"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  {coords.map((pt, idx) => (
-                    <circle
-                      key={idx}
-                      cx={pt.x}
-                      cy={pt.y}
-                      r={idx === coords.length - 1 ? 5 : 3}
-                      fill={idx === coords.length - 1 ? '#B55478' : '#FFFFFF'}
+                <div className="p-4 rounded-2xl bg-white/90 border border-[#F4BFD3]">
+                  <svg
+                    viewBox="0 0 360 110"
+                    className="w-full h-36 overflow-visible"
+                    role="img"
+                    aria-label="Grafik performa konten"
+                  >
+                    <defs>
+                      <linearGradient id="pinkAreaY2K" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#D98EAA" stopOpacity="0.45" />
+                        <stop offset="65%" stopColor="#F4BFD3" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.02" />
+                      </linearGradient>
+                    </defs>
+                    <path d={areaPath} fill="url(#pinkAreaY2K)" />
+                    <path
+                      d={linePath}
+                      fill="none"
                       stroke="#B55478"
-                      strokeWidth="2"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
-                  ))}
-                </svg>
-                <div className="flex justify-between text-[10px] font-mono text-[#39313A]/55 pt-1">
-                  <span>Hari 1</span>
-                  <span>Hari 3</span>
-                  <span>Hari 5</span>
-                  <span>Hari 7</span>
+                    {coords.map((pt, idx) => (
+                      <circle
+                        key={idx}
+                        cx={pt.x}
+                        cy={pt.y}
+                        r={idx === coords.length - 1 ? 5 : 3}
+                        fill={idx === coords.length - 1 ? '#B55478' : '#FFFFFF'}
+                        stroke="#B55478"
+                        strokeWidth="2"
+                      />
+                    ))}
+                  </svg>
+                  <div className="flex justify-between text-[10px] font-mono text-[#39313A]/55 pt-1">
+                    <span>Hari 1</span>
+                    <span>Hari 3</span>
+                    <span>Hari 5</span>
+                    <span>Hari 7</span>
+                  </div>
                 </div>
               </div>
             </section>
@@ -272,25 +290,25 @@ export function PerformanceMonitoring({
             {/* Right Metrics Column */}
             <section className="lg:col-span-5 space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-4 text-center">
+                <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-4 text-center">
                   <p className="text-2xl font-bold font-mono tabular-nums text-[#39313A]">
                     {formatCompactMetric(currentItem.performance.views)}
                   </p>
                   <p className="text-xs text-[#39313A]/65 mt-0.5">Views</p>
                 </div>
-                <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-4 text-center">
+                <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-4 text-center">
                   <p className="text-2xl font-bold font-mono tabular-nums text-[#39313A]">
                     {formatCompactMetric(currentItem.performance.likes)}
                   </p>
                   <p className="text-xs text-[#39313A]/65 mt-0.5">Likes</p>
                 </div>
-                <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-4 text-center">
+                <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-4 text-center">
                   <p className="text-2xl font-bold font-mono tabular-nums text-[#39313A]">
                     {formatCompactMetric(currentItem.performance.comments)}
                   </p>
                   <p className="text-xs text-[#39313A]/65 mt-0.5">Comments</p>
                 </div>
-                <div className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-4 text-center">
+                <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-4 text-center">
                   <p className="text-2xl font-bold font-mono tabular-nums text-[#39313A]">
                     {formatCompactMetric(currentItem.performance.shares)}
                   </p>
@@ -298,9 +316,9 @@ export function PerformanceMonitoring({
                 </div>
               </div>
 
-              <div className="p-4 rounded-3xl bg-gradient-to-r from-[#F8DCE8] to-white border border-[#D98EAA] flex items-center justify-between">
+              <div className="p-4 rounded-3xl bg-gradient-to-r from-[#F8DCE8] to-white border-2 border-white ring-1 ring-[#D98EAA] flex items-center justify-between">
                 <span className="text-xs font-semibold text-[#39313A] inline-flex items-center gap-1.5">
-                  <ChromeStar className="w-4 h-4" />
+                  <ChromeStar className="w-5 h-5 y2k-twinkle" />
                   Engagement Rate
                 </span>
                 <span className="text-xl font-bold font-mono tabular-nums text-[#B55478]">
@@ -313,7 +331,7 @@ export function PerformanceMonitoring({
           {isEditing && (
             <form
               onSubmit={handleSave}
-              className="y2k-glass-card border border-[#D98EAA] rounded-3xl p-6 space-y-4"
+              className="scrapbook-card border-2 border-white ring-1 ring-[#D98EAA] rounded-3xl p-6 space-y-4"
             >
               <p className="text-xs font-bold text-[#39313A]">
                 Input Data Performa Konten
@@ -389,13 +407,13 @@ export function PerformanceMonitoring({
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="px-4 py-2 text-xs font-medium text-[#39313A] bg-white border border-[#F4BFD3] rounded-full"
+                  className="px-4 py-2 text-xs font-medium text-[#39313A] bg-white border border-[#F4BFD3] rounded-full cursor-pointer"
                 >
                   Tutup
                 </button>
                 <button
                   type="submit"
-                  className="y2k-glossy-pink text-white px-5 py-2 text-xs font-semibold rounded-full inline-flex items-center gap-1.5"
+                  className="y2k-glossy-pink border border-white text-white px-5 py-2 text-xs font-semibold rounded-full inline-flex items-center gap-1.5 cursor-pointer"
                 >
                   <Save className="w-3.5 h-3.5" />
                   Simpan
@@ -411,33 +429,39 @@ export function PerformanceMonitoring({
           )}
 
           {/* Kesimpulan & Selesai */}
-          <section className="y2k-glass-card border border-[#F4BFD3] rounded-3xl p-6 space-y-4">
-            <h2 className="text-sm font-bold text-[#39313A]">Kesimpulan Evaluasi</h2>
-            <div className="p-4 rounded-2xl bg-[#F8DCE8]/45 border border-[#F4BFD3] flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
-              <div className="text-xs text-[#39313A] leading-relaxed">
-                <p className="font-semibold">
-                  {currentItem.evaluationNote ||
-                    (currentItem.performance.views === 0
-                      ? 'Belum ada data metrik. Klik Catat Metrik di kanan atas untuk memasukkan hasil Views, Likes, Comments, dan Shares.'
-                      : engagementRate >= 5
-                        ? 'Kontenmu mendapatkan engagement yang baik!'
-                        : 'Konten telah dipublikasikan. Evaluasi jam tayang atau format untuk peningkatan berikutnya.')}
-                </p>
-                <p className="text-[#39313A]/70 mt-1">
-                  Dipublikasikan pada {formatIndonesianDate(currentItem.scheduledDate)} pukul{' '}
-                  {currentItem.scheduledTime} WIB di {currentItem.platform}.
-                </p>
+          <section className="relative overflow-visible">
+            <CuteSmiley className="w-10 h-10 -top-4 -right-2 rotate-12 z-20 pointer-events-none absolute hidden sm:block" />
+            <div className="scrapbook-card border-2 border-white ring-1 ring-[#F4BFD3] rounded-3xl p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-bold text-[#39313A]">Kesimpulan Evaluasi</h2>
+                <StickerLabel text="CONTENT MOOD" variant="pink" className="-rotate-1" />
               </div>
-            </div>
+              <div className="p-4 rounded-2xl bg-[#F8DCE8]/45 border border-[#F4BFD3] flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <div className="text-xs text-[#39313A] leading-relaxed">
+                  <p className="font-semibold">
+                    {currentItem.evaluationNote ||
+                      (currentItem.performance.views === 0
+                        ? 'Belum ada data metrik. Klik Catat Metrik di kanan atas untuk memasukkan hasil Views, Likes, Comments, dan Shares.'
+                        : engagementRate >= 5
+                          ? 'Kontenmu mendapatkan engagement yang baik!'
+                          : 'Konten telah dipublikasikan. Evaluasi jam tayang atau format untuk peningkatan berikutnya.')}
+                  </p>
+                  <p className="text-[#39313A]/70 mt-1">
+                    Dipublikasikan pada {formatIndonesianDate(currentItem.scheduledDate)} pukul{' '}
+                    {currentItem.scheduledTime} WIB di {currentItem.platform}.
+                  </p>
+                </div>
+              </div>
 
-            <button
-              type="button"
-              onClick={onFinish}
-              className="w-full y2k-glossy-pink text-white py-3.5 px-6 text-sm font-semibold rounded-full transition-all cursor-pointer"
-            >
-              Selesai
-            </button>
+              <button
+                type="button"
+                onClick={onFinish}
+                className="w-full y2k-glossy-pink border-2 border-white text-white py-3.5 px-6 text-sm font-semibold rounded-full transition-all cursor-pointer"
+              >
+                Selesai
+              </button>
+            </div>
           </section>
         </div>
       )}

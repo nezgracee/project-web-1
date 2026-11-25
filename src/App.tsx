@@ -7,7 +7,7 @@ import { OverviewDashboard } from './components/OverviewDashboard';
 import { PerformanceMonitoring } from './components/PerformanceMonitoring';
 import { ProfileView } from './components/ProfileView';
 import { Sidebar } from './components/Sidebar';
-import { ChromeSparkle } from './components/Y2KDecorations';
+import { ChromeSparkle, ChromeStar, StickerLabel } from './components/Y2KDecorations';
 import { DEFAULT_USER_PROFILE, INITIAL_CONTENT_ITEMS } from './data/initialData';
 import {
   ContentItem,
@@ -237,15 +237,11 @@ export default function App() {
     : null;
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-[#FFF9FB] via-[#FDF2F7] to-[#F8DCE8]/65 text-[#39313A] relative">
-      {/* Subtle Y2K decorative ambient background glows */}
+    <div className="min-h-screen flex scrapbook-canvas text-[#39313A] relative">
+      {/* Soft paper grain overlay */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed top-0 right-0 w-96 h-96 rounded-full bg-[#F8DCE8]/55 blur-3xl -z-0"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed bottom-0 left-64 w-80 h-80 rounded-full bg-slate-200/40 blur-3xl -z-0"
+        className="pointer-events-none fixed inset-0 paper-grain-overlay z-0"
       />
 
       <Sidebar
@@ -259,21 +255,21 @@ export default function App() {
       />
 
       <div className="flex-1 flex flex-col min-w-0 relative z-10">
-        {/* Clean Contextual Top Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-white/80 backdrop-blur-lg border-b border-[#F4BFD3]/80 px-4 sm:px-8 flex items-center justify-between gap-4">
+        {/* Clean Contextual Top Bar with Y2K Sticker Accents */}
+        <header className="sticky top-0 z-30 h-16 bg-white/85 backdrop-blur-lg border-b-2 border-white shadow-[0_4px_18px_-10px_rgba(181,84,120,0.2)] px-4 sm:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden w-9 h-9 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center text-[#39313A]"
+              className="lg:hidden w-9 h-9 rounded-full y2k-chrome-surface border-2 border-white ring-1 ring-slate-300/80 flex items-center justify-center text-[#39313A]"
               aria-label="Buka navigasi"
             >
               <Menu className="w-4 h-4" />
             </button>
 
             <div className="flex items-center gap-2 text-sm min-w-0">
-              <ChromeSparkle className="w-4 h-4 shrink-0" />
-              <span className="text-[#39313A]/55 hidden sm:inline whitespace-nowrap">
+              <ChromeSparkle className="w-5 h-5 shrink-0 y2k-twinkle" />
+              <span className="text-[#39313A]/60 hidden sm:inline whitespace-nowrap">
                 Penjadwalan Konten Optimal
               </span>
               <span className="text-[#D98EAA] hidden sm:inline" aria-hidden="true">
@@ -282,112 +278,125 @@ export default function App() {
               <span className="font-semibold text-[#39313A] truncate">
                 {isProfileView ? 'Profil Pengguna' : STEP_BREADCRUMBS[activeStep]}
               </span>
+              <ChromeStar className="w-4 h-4 hidden md:inline-block y2k-twinkle shrink-0" />
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => handleStartNow()}
-            className="y2k-glossy-pink text-white px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            <span>Mulai Sekarang</span>
-          </button>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <StickerLabel
+              text="Y2K STUDIO"
+              variant="chrome"
+              className="hidden md:inline-flex -rotate-2"
+            />
+            <button
+              type="button"
+              onClick={() => handleStartNow()}
+              className="y2k-glossy-pink border-2 border-white text-white px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <span>Mulai Sekarang</span>
+            </button>
+          </div>
         </header>
 
-        {/* Spacious Main Viewport */}
+        {/* Spacious Main Viewport with Smooth Page Transitions */}
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 py-6 sm:py-8">
-          {isProfileView ? (
-            <ProfileView
-              profile={profile}
-              onSaveProfile={(next) => {
-                setProfile(next);
-                showToast('Profil tersimpan.');
-              }}
-              onClearAllData={handleClearAllData}
-            />
-          ) : (
-            <>
-              {activeStep === 'dashboard' && (
-                <OverviewDashboard
-                  items={items}
-                  onStartNow={() => handleStartNow()}
-                  onNavigateTab={handleSelectNavTab}
-                  onOpenStep={handleOpenStep}
-                />
-              )}
+          <div
+            key={isProfileView ? 'profil' : activeStep}
+            className="y2k-page-enter"
+          >
+            {isProfileView ? (
+              <ProfileView
+                profile={profile}
+                onSaveProfile={(next) => {
+                  setProfile(next);
+                  showToast('Profil tersimpan.');
+                }}
+                onClearAllData={handleClearAllData}
+              />
+            ) : (
+              <>
+                {activeStep === 'dashboard' && (
+                  <OverviewDashboard
+                    items={items}
+                    onStartNow={() => handleStartNow()}
+                    onNavigateTab={handleSelectNavTab}
+                    onOpenStep={handleOpenStep}
+                  />
+                )}
 
-              {isPlannerStep && (
-                <ContentPlanner
-                  currentStep={activeStep}
-                  onChangeStep={setActiveStep}
-                  existingItems={items}
-                  editingItem={editingItem}
-                  prefilledDate={prefilledDate}
-                  onSaveDraftAndGoCalendar={handleSaveDraftAndGoCalendar}
-                  onBackToHome={() => {
-                    setEditingItemId(null);
-                    setActiveStep('dashboard');
-                  }}
-                />
-              )}
+                {isPlannerStep && (
+                  <ContentPlanner
+                    currentStep={activeStep}
+                    onChangeStep={setActiveStep}
+                    existingItems={items}
+                    editingItem={editingItem}
+                    prefilledDate={prefilledDate}
+                    onSaveDraftAndGoCalendar={handleSaveDraftAndGoCalendar}
+                    onBackToHome={() => {
+                      setEditingItemId(null);
+                      setActiveStep('dashboard');
+                    }}
+                  />
+                )}
 
-              {activeStep === 'calendar' && (
-                <CalendarView
-                  items={items}
-                  highlightedItemId={focusedItemId}
-                  onBack={() => setActiveStep('dashboard')}
-                  onCreateForDate={(dateStr) => handleStartNow(dateStr)}
-                  onEditSchedule={(id) => handleOpenStep('schedule_time', id)}
-                  onDeleteItem={handleDeleteItem}
-                  onSaveAndContinueToEvaluation={(id) =>
-                    handleOpenStep('evaluate_optimality', id)
-                  }
-                />
-              )}
+                {activeStep === 'calendar' && (
+                  <CalendarView
+                    items={items}
+                    highlightedItemId={focusedItemId}
+                    onBack={() => setActiveStep('dashboard')}
+                    onCreateForDate={(dateStr) => handleStartNow(dateStr)}
+                    onEditSchedule={(id) => handleOpenStep('schedule_time', id)}
+                    onDeleteItem={handleDeleteItem}
+                    onSaveAndContinueToEvaluation={(id) =>
+                      handleOpenStep('evaluate_optimality', id)
+                    }
+                  />
+                )}
 
-              {activeStep === 'evaluate_optimality' && (
-                <OptimalityEvaluation
-                  items={items}
-                  focusedItemId={focusedItemId}
-                  onBack={() => setActiveStep('calendar')}
-                  onStartNewPlan={() => handleStartNow()}
-                  onMarkNeedsRevision={handleMarkNeedsRevision}
-                  onPublishContent={handlePublishContent}
-                />
-              )}
+                {activeStep === 'evaluate_optimality' && (
+                  <OptimalityEvaluation
+                    items={items}
+                    focusedItemId={focusedItemId}
+                    onBack={() => setActiveStep('calendar')}
+                    onStartNewPlan={() => handleStartNow()}
+                    onMarkNeedsRevision={handleMarkNeedsRevision}
+                    onPublishContent={handlePublishContent}
+                  />
+                )}
 
-              {(activeStep === 'publish_monitoring' ||
-                activeStep === 'evaluation_summary') && (
-                <PerformanceMonitoring
-                  items={items}
-                  focusedItemId={focusedItemId}
-                  onBack={() => setActiveStep('dashboard')}
-                  onStartNewPlan={() => handleStartNow()}
-                  onUpdatePerformance={handleUpdatePerformance}
-                  onSaveEvaluationNote={handleSaveEvaluationNote}
-                  onFinish={() => {
-                    setActiveStep('dashboard');
-                    showToast('Evaluasi selesai! Kembali ke Beranda.');
-                  }}
-                />
-              )}
-            </>
-          )}
+                {(activeStep === 'publish_monitoring' ||
+                  activeStep === 'evaluation_summary') && (
+                  <PerformanceMonitoring
+                    items={items}
+                    focusedItemId={focusedItemId}
+                    onBack={() => setActiveStep('dashboard')}
+                    onStartNewPlan={() => handleStartNow()}
+                    onUpdatePerformance={handleUpdatePerformance}
+                    onSaveEvaluationNote={handleSaveEvaluationNote}
+                    onFinish={() => {
+                      setActiveStep('dashboard');
+                      showToast('Evaluasi selesai! Kembali ke Beranda.');
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </main>
       </div>
 
       {toastMessage && (
         <div
           role="status"
-          className="fixed bottom-5 right-5 z-50 max-w-sm bg-[#39313A] text-white px-4 py-3 rounded-full shadow-lg border border-[#D98EAA]/50 flex items-center gap-3 text-xs"
+          className="fixed bottom-5 right-5 z-50 max-w-sm bg-[#39313A] text-white px-4 py-3 rounded-full shadow-lg border-2 border-white ring-1 ring-[#D98EAA] flex items-center gap-3 text-xs"
         >
           <CheckCircle2 className="w-4 h-4 text-[#F4BFD3] shrink-0" />
           <span className="leading-snug">{toastMessage}</span>
           <button
             type="button"
             onClick={() => setToastMessage(null)}
-            className="text-white/60 hover:text-white ml-1 shrink-0"
+            className="text-white/60 hover:text-white ml-1 shrink-0 cursor-pointer"
             aria-label="Tutup notifikasi"
           >
             <X className="w-3.5 h-3.5" />

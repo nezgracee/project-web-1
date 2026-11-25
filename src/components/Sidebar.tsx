@@ -9,7 +9,16 @@ import {
   X,
 } from 'lucide-react';
 import { ContentItem, FlowStep, TopNavTab } from '../types/content';
-import { AbstractFlower, ChromeStar, GlossyHeart } from './Y2KDecorations';
+import {
+  ChromeSparkle,
+  ChromeStar,
+  CuteSmiley,
+  GlossyHeart,
+  PinkBow,
+  PinkFlower,
+  StickerLabel,
+  WashiTape,
+} from './Y2KDecorations';
 
 interface SidebarProps {
   activeNav: TopNavTab | 'planner' | 'evaluation';
@@ -85,11 +94,15 @@ export function Sidebar({
   ];
 
   const sidebarBody = (
-    <div className="w-64 h-full flex flex-col bg-white/88 backdrop-blur-xl border-r border-[#F4BFD3]/90 relative overflow-hidden">
-      {/* Subtle Y2K ambient glow in sidebar */}
+    <div className="w-64 h-full flex flex-col bg-gradient-to-b from-white/95 via-[#FFF6FA]/92 to-[#F8DCE8]/65 backdrop-blur-xl border-r-2 border-white shadow-[6px_0_26px_-12px_rgba(181,84,120,0.22)] relative overflow-hidden">
+      {/* Subtle pink & silver ambient corners */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-12 -left-10 w-44 h-44 rounded-full bg-[#F8DCE8]/70 blur-2xl"
+        className="pointer-events-none absolute -top-10 -right-10 w-32 h-32 rounded-full bg-slate-200/45 blur-2xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-12 -left-10 w-44 h-44 rounded-full bg-[#F4BFD3]/45 blur-2xl"
       />
 
       {/* Brand Zone */}
@@ -100,12 +113,13 @@ export function Sidebar({
             onSelectTab('beranda');
             onCloseMobile();
           }}
-          className="flex items-center gap-2.5 text-left group"
+          className="flex items-center gap-2.5 text-left group relative"
         >
-          <span className="w-8 h-8 rounded-full y2k-chrome-surface border border-slate-300/80 flex items-center justify-center shrink-0">
-            <ChromeStar className="w-4 h-4" />
+          <span className="relative w-9 h-9 rounded-full y2k-chrome-surface border-2 border-white flex items-center justify-center shrink-0">
+            <ChromeStar className="w-5 h-5 y2k-twinkle" />
+            <PinkBow className="w-6 h-5 absolute -bottom-2 -right-2.5 rotate-12 pointer-events-none" />
           </span>
-          <span className="text-sm font-bold tracking-tight text-[#39313A] group-hover:text-[#B55478] transition-colors whitespace-nowrap">
+          <span className="text-sm font-bold tracking-tight text-[#39313A] group-hover:text-[#B55478] transition-colors whitespace-nowrap pl-0.5">
             Konten Optimal
           </span>
         </button>
@@ -120,15 +134,21 @@ export function Sidebar({
         </button>
       </div>
 
+      {/* Scrapbook Sticker Tag Strip */}
+      <div className="px-4 pt-4 pb-1 flex items-center justify-between relative z-10">
+        <StickerLabel text="CREATIVE SPACE" variant="chrome" className="-rotate-2" />
+        <ChromeSparkle className="w-5 h-5 y2k-twinkle rotate-6" />
+      </div>
+
       {/* Primary Sidebar CTA Pill */}
-      <div className="px-4 pt-5 pb-2 relative z-10">
+      <div className="px-4 pt-2 pb-2 relative z-10">
         <button
           type="button"
           onClick={() => {
             onStartNow();
             onCloseMobile();
           }}
-          className="w-full y2k-glossy-pink text-white text-xs font-semibold py-2.5 px-4 rounded-full inline-flex items-center justify-center gap-2 transition-all cursor-pointer"
+          className="w-full y2k-glossy-pink border-2 border-white text-white text-xs font-semibold py-2.5 px-4 rounded-full inline-flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5 shrink-0" />
           <span>Buat Jadwal Baru</span>
@@ -138,7 +158,7 @@ export function Sidebar({
       {/* Navigation Links */}
       <nav
         aria-label="Navigasi utama"
-        className="flex-1 px-3 py-3 space-y-1 overflow-y-auto relative z-10"
+        className="flex-1 px-3 py-3 space-y-1.5 overflow-y-auto relative z-10"
       >
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -151,10 +171,10 @@ export function Sidebar({
                 item.onClick();
                 onCloseMobile();
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-left transition-all ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-gradient-to-r from-[#F8DCE8] to-[#F4BFD3]/70 text-[#39313A] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] border border-[#D98EAA]/60'
-                  : 'text-[#39313A]/75 hover:bg-[#F8DCE8]/45 hover:text-[#39313A]'
+                  ? 'bg-gradient-to-r from-[#F8DCE8] via-[#F4BFD3]/80 to-white text-[#39313A] font-semibold border-2 border-white shadow-[0_6px_14px_-6px_rgba(181,84,120,0.35)]'
+                  : 'text-[#39313A]/75 hover:bg-white/80 hover:text-[#39313A] border border-transparent hover:border-[#F4BFD3]/70'
               }`}
             >
               <span className="flex items-center gap-3 min-w-0">
@@ -168,8 +188,10 @@ export function Sidebar({
 
               {typeof item.count === 'number' && item.count > 0 && (
                 <span
-                  className={`text-xs font-mono tabular-nums ml-2 ${
-                    isActive ? 'text-[#B55478] font-bold' : 'text-[#39313A]/55'
+                  className={`text-xs font-mono tabular-nums ml-2 px-1.5 py-0.5 rounded-full ${
+                    isActive
+                      ? 'bg-white/90 text-[#B55478] font-bold'
+                      : 'text-[#39313A]/55'
                   }`}
                 >
                   {item.count}
@@ -180,13 +202,19 @@ export function Sidebar({
         })}
       </nav>
 
-      {/* Subtle Y2K Footer Ornament */}
-      <div className="p-4 border-t border-[#F4BFD3]/70 relative z-10 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[11px] text-[#39313A]/65">
-          <GlossyHeart className="w-4 h-4 shrink-0" />
-          <span>Penyimpanan Lokal</span>
+      {/* Scrapbook Sticker Footer Cluster */}
+      <div className="p-4 pt-5 border-t border-[#F4BFD3]/70 relative z-10 bg-white/55">
+        <WashiTape className="-top-2.5 left-5 -rotate-3 absolute" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[11px] font-medium text-[#39313A]/75">
+            <GlossyHeart className="w-5 h-5 shrink-0 sticker-interactive" />
+            <span>Penyimpanan Lokal</span>
+          </div>
+          <div className="flex items-center -space-x-1">
+            <CuteSmiley className="w-6 h-6 -rotate-6 sticker-interactive" />
+            <PinkFlower className="w-6 h-6 rotate-12 sticker-interactive" />
+          </div>
         </div>
-        <AbstractFlower className="w-6 h-6 opacity-80" />
       </div>
     </div>
   );
